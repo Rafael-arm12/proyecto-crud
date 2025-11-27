@@ -41,7 +41,7 @@ ensureTable();
 // Routes
 
 // GET /api/users - Obtener todos los usuarios
-app.get('/users', async (req, res) => {
+app.get('/api/users', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM users ORDER BY id ASC');
     res.json(result.rows);
@@ -52,7 +52,7 @@ app.get('/users', async (req, res) => {
 });
 
 // GET /api/users/:id - Obtener usuario por id
-app.get('/users/:id', async (req, res) => {
+app.get('/api/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
@@ -65,7 +65,7 @@ app.get('/users/:id', async (req, res) => {
 });
 
 // POST /api/users - Crear usuario
-app.post('/users', async (req, res) => {
+app.post('/api/users', async (req, res) => {
   try {
     const { nombre, correo } = req.body;
     if (!nombre || !correo) return res.status(400).json({ error: 'Faltan datos (nombre, correo)' });
@@ -81,7 +81,7 @@ app.post('/users', async (req, res) => {
 });
 
 // PUT /api/users/:id - Actualizar usuario
-app.put('/users/:id', async (req, res) => {
+app.put('/api/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { nombre, correo } = req.body;
@@ -99,7 +99,7 @@ app.put('/users/:id', async (req, res) => {
 });
 
 // DELETE /api/users/:id - Eliminar usuario
-app.delete('/users/:id', async (req, res) => {
+app.delete('/api/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const result = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
