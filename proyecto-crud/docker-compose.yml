@@ -1,0 +1,38 @@
+services:
+  nginx-gateway:
+    build: ./nginx
+    ports:
+      - '80:80'
+    depends_on:
+      - api-service
+
+  api-service:
+    build: ./api-service
+    environment:
+      - DB_HOST=postgres-db
+      - POSTGRES_DB=crud_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - DB_PORT=5432
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"   # opcional para debug local
+
+  postgres-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: crud_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
